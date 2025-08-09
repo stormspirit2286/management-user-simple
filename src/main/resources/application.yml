@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: management-user
+
+  # Database Configuration - D�NG ROOT USER
+  datasource:
+    url: jdbc:mysql://localhost:3306/management_user?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true
+    username: root
+    password: rootpassword
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: update  # S? t?o l?i tables
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  # Jackson Configuration
+#  jackson:
+#    property-naming-strategy: SNAKE_CASE
+#    serialization:
+#      write-dates-as-timestamps: false
+#      indent-output: true
+
+# Logging Configuration
+logging:
+  level:
+    vn.duynv.managementuser: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
