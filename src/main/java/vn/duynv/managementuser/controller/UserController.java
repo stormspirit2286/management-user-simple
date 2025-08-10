@@ -30,6 +30,15 @@ public class UserController {
                 .body(ApiResponse.created("User created successfully", user));
     }
 
+    @PostMapping("/create-multiple-users")
+    public ResponseEntity<ApiResponse<List<UserDetailResponse>>> createMultipleUsers(@RequestBody List<UserCreationRequest> requests) {
+        log.info("Creating new {} users.", requests.size());
+        List<UserDetailResponse> users = userService.createMultipleUser(requests);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.created("Users created successfully", users));
+    }
+
     @GetMapping()
     public ResponseEntity<ApiResponse<List<UserDetailResponse>>> getAllUsers() {
         log.info("Get all users");
