@@ -18,7 +18,7 @@ public class ApiResponse<T> {
     private boolean success;
     private String message;
     private T data;
-    private Object error;
+    private Object errors;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
@@ -59,11 +59,29 @@ public class ApiResponse<T> {
                 .build();
     }
 
+    public static <T> ApiResponse<T> badRequest(String message, Object validationErrors) {
+        return ApiResponse.<T>builder()
+                .success(false)
+                .message(message)
+                .errors(validationErrors)
+                .statusCode(400)
+                .build();
+    }
+
+
     public static <T> ApiResponse<T> notFound(String message) {
         return ApiResponse.<T>builder()
                 .success(false)
                 .message(message)
                 .statusCode(404)
+                .build();
+    }
+
+    public static <T> ApiResponse<T> conflict(String message) {
+        return ApiResponse.<T>builder()
+                .success(false)
+                .message(message)
+                .statusCode(409)
                 .build();
     }
 

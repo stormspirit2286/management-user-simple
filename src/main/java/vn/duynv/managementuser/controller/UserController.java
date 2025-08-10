@@ -1,5 +1,6 @@
 package vn.duynv.managementuser.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<UserDetailResponse>> createUser(@RequestBody UserCreationRequest request) {
+    public ResponseEntity<ApiResponse<UserDetailResponse>> createUser(@Valid @RequestBody UserCreationRequest request) {
         log.info("Creating new user: {}", request.getEmail());
         UserDetailResponse user = userService.createUser(request);
         return ResponseEntity
@@ -41,7 +42,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserDetailResponse>> getUserById(@PathVariable("id") Long userId) {
-        log.info("Get user with", userId);
+        log.info("Get user with id: {}", userId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Get user successfully", userService.findUserById(userId)));
     }
