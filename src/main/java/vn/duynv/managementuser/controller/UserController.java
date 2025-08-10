@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.duynv.managementuser.dto.request.UserCreationRequest;
 import vn.duynv.managementuser.dto.response.ApiResponse;
+import vn.duynv.managementuser.dto.response.PageResponse;
 import vn.duynv.managementuser.dto.response.UserDetailResponse;
 import vn.duynv.managementuser.service.UserService;
 
@@ -54,5 +55,19 @@ public class UserController {
         log.info("Get user with id: {}", userId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("Get user successfully", userService.findUserById(userId)));
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<ApiResponse<PageResponse<UserDetailResponse>>> getUsersWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        log.info("Getting users with pagination: page={}, size={}", page, size);
+
+        PageResponse<UserDetailResponse> users = userService.getUsersWithPagination(page, size);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Get users with pagination successfully", users)
+        );
     }
 }

@@ -1,6 +1,7 @@
 package vn.duynv.managementuser.service;
 
 import vn.duynv.managementuser.dto.request.UserCreationRequest;
+import vn.duynv.managementuser.dto.response.PageResponse;
 import vn.duynv.managementuser.dto.response.UserDetailResponse;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface UserService {
     UserDetailResponse findUserById(Long userId);
 
     List<UserDetailResponse> createMultipleUser(List<UserCreationRequest> requests);
+
+    PageResponse<UserDetailResponse> getUsersWithPagination(int page, int size);
 }

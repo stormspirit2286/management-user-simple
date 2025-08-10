@@ -2,9 +2,13 @@ package vn.duynv.managementuser.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.duynv.managementuser.dto.request.UserCreationRequest;
+import vn.duynv.managementuser.dto.response.PageResponse;
 import vn.duynv.managementuser.dto.response.UserDetailResponse;
 import vn.duynv.managementuser.entity.User;
 import vn.duynv.managementuser.exception.ResourceAlreadyExistsException;
@@ -76,6 +80,21 @@ public class UserServiceImpl implements UserService {
         List<User> users = requests.stream().map(userMapper::toUser).toList();
         List<User> savedUsers = userRepository.saveAll(users);
         return savedUsers.stream().map(userMapper::toUserResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResponse<UserDetailResponse> getUsersWithPagination(int page, int size) {
+        log.info("Getting users with pagination: page={}, size={}", page, size);
+
+        if (page < 0) page = 0;
+        if (size <= 0 || size > 100) size = 10; // Default size = 10, max = 100
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userRepository.findAll(pageable);
+        Page<UserDetailResponse> responsePage = userPage.map(userMapper::toUserResponse);
+        log.info("Found {} users, page {} of {}",
+                userPage.getTotalElements(), page + 1, userPage.getTotalPages());
+        return new PageResponse<>(responsePage);
     }
 
     private void validateNoDuplicatesInRequest(List<UserCreationRequest> requests) {
