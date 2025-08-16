@@ -3,6 +3,8 @@ package vn.duynv.managementuser.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +70,18 @@ public class UserController {
 
         return ResponseEntity.ok(
                 ApiResponse.success("Get users with pagination successfully", users)
+        );
+    }
+
+    @GetMapping("/pageable")
+    public ResponseEntity<ApiResponse<Page<UserDetailResponse>>> getUsersPageable(Pageable pageable) {
+        log.info("Getting users with pageable: page={}, size={}",
+                pageable.getPageNumber(), pageable.getPageSize());
+
+        Page<UserDetailResponse> users = userService.getUserPage(pageable);
+
+        return ResponseEntity.ok(
+                ApiResponse.success("Get users with pageable successfully", users)
         );
     }
 }

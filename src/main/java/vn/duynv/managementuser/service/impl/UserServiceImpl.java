@@ -17,10 +17,13 @@ import vn.duynv.managementuser.mapper.UserMapper;
 import vn.duynv.managementuser.repository.UserRepository;
 import vn.duynv.managementuser.service.UserService;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -95,6 +98,12 @@ public class UserServiceImpl implements UserService {
         log.info("Found {} users, page {} of {}",
                 userPage.getTotalElements(), page + 1, userPage.getTotalPages());
         return new PageResponse<>(responsePage);
+    }
+
+    @Override
+    public Page<UserDetailResponse> getUserPage(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(userMapper::toUserResponse);
     }
 
     private void validateNoDuplicatesInRequest(List<UserCreationRequest> requests) {
